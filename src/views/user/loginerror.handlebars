@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Error de inicio de sesión</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    h1 {
+      color: red;
+    }
+    
+    p {
+      margin-bottom: 10px;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #337ab7;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Error de inicio de sesión</h1>
+  
+  {{#if error}}
+    <p>{{error}}</p>
+  {{/if}}
+  
+  <p>No se pudo iniciar sesión con las credenciales proporcionadas.</p>
+  <p>Por favor, verifica tus datos e intenta nuevamente.</p>
+  
+  <a class="btn" href="/login">Aceptar</a>
+</body>
+</html>

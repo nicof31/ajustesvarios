@@ -1,0 +1,209 @@
+<head>
+  <title></title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-image: linear-gradient(to right top, #82d9dc, #67aebb, #528596, #3e5f70, #2a3b49, #223441, #1a2d3a, #122632, #0e3744, #034853, #005b5f, #0b6d66);
+    }
+
+    .product-main {
+      padding-top: 1em;
+      font-family: 'Poppins', sans-serif;
+      justify-content: center;
+      align-items: center;
+
+    }
+
+    .card {
+      width: 45%;
+    }
+
+    .centered {
+      display: flex;
+      justify-content: center;
+    }
+
+    .product-card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: fit-content;
+    }
+
+    .withe-text {
+      color: white;
+      font-weight: bold;
+    }
+
+    #adminButton {
+      display: grid;
+    }
+
+  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<h1 style="color: white;">Bienvenido:</h1>
+<section class="perfil-container">
+  {{#if error.status}}
+  <p>{{error.message}}</p>
+  {{/if}}
+  <article>
+    <div class="product-main">
+      <div class="centered">
+        <div class="card m-1">
+          <ul class="card-body">
+            <li class="list-group list-group-flush">
+              <div class="user_info">
+                <p class="list-group-item">Usuario: <span id="first_name"></span></p>
+                <p class="list-group-item">Email: <span id="email"></span></p>
+                <p class="list-group-item">Rol: <span id="rol"></span></p>
+                <p class="list-group-item">Id Cart Asignado: <span id="cart"></span></p>
+              </div>
+              <span id="perfil">
+                <p id="adminButton"></p>
+              </span>
+                <button onclick="goToCurrent()" class="btn btn-info">Current</button>
+               <button onclick="goToProfile()" class="btn btn-secondary">Ver Perfil</button>
+               <button onclick="goToHistoryCart()" class="btn btn-warning">Ver Historico Cart</button>
+              <button onclick="logout()" class="btn btn-primary">Cerrar sesión</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+  </article>
+</section>
+<section>
+  {{#if productsPagination.isValid}}
+  <div class="product-main text-center">
+    <button onclick="goToCart()" class="btn btn-light m-2">Carrito</button>
+    <div class="product-card-container">
+      {{#each productsPagination.docs}}
+<div class="card m-1">
+  <ul class="card-body">
+    <li class="list-group list-group-flush">
+      <p>_id: {{this._id}}</p>
+      <p class="list-group-item">title: {{this.title}} &nbsp; </p>
+      <p class="list-group-item">description: {{this.description}}</p>
+      <p class="list-group-item">code: {{this.code}} &nbsp; price: {{this.price}}</p>
+      <p class="list-group-item">category: {{this.category}} &nbsp;stock: {{this.stock}}</p>
+      <p class="list-group-item">thumbnail: {{this.thumbnail}} </p>
+      {{#if this.stock}}
+      <button onclick="addToCart('{{this._id}}')" class="btn btn-primary">Agregar al carrito</button>
+      {{else}}
+      <button class="btn btn-danger" disabled>Producto Agotado</button>
+      {{/if}}
+    </li>
+  </ul>
+</div>
+{{/each}}
+    </div>
+    <br />
+
+
+    {{#if productsPagination.hasPrevPage}}
+    <a href={{productsPagination.prevLink}}><button class="btn btn-light m-2">Anterior</button></a>
+    {{/if}}
+
+    <div>
+      <p class="withe-text m-2">Pagina actual: {{productsPagination.page}}</p>
+    </div>
+
+    {{#if productsPagination.hasNextPage}}
+    <a href={{productsPagination.nextLink}}><button class="btn btn-light m-2">Siguiente</button></a>
+    {{/if}}
+
+  </div>
+  {{else}}
+  <h1>No hay productos para mostrar</h1>
+  {{/if}}
+</section>
+
+
+
+<script>
+function addToCart(idProducto) {
+  console.log(idProducto);
+  fetch(`http://localhost:8080/api/carts/${idProducto}/?accion=aumentar`, {
+    method: "POST",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.stock > 0) {
+        alert(`El producto _id: ${idProducto} se agregó correctamente al carrito`);
+      } else {
+        alert(`El producto _id: ${idProducto} está agotado y no se pudo agregar al carrito`);
+      }
+    })
+    .catch((error) => {
+      console.log(`Error al agregar al carrito: ${error}`);
+      alert(`Ocurrió un error al agregar el producto al carrito`);
+    });
+}
+  function logout() {
+    window.location.href = "/logout";
+  }
+
+  function perfilAdmin (){
+      window.location.href = "/register";
+  }
+
+   function goToProfile() {
+    window.location.href = "/profile";
+  }
+
+   function goToCurrent() {
+    window.location.href = "/api/session/current";
+  }
+
+ function goToHistoryCart(){
+    window.location.href = "/api/session/historycart";
+  }
+
+   function goToCart() {
+    const cartId = "{{user.cart}}";
+    if (cartId) {
+      window.location.href = `http://localhost:8080/api/carts/${cartId}`;
+    } else {
+      alert("El usuario no tiene un carrito asignado.");
+    }
+  }
+
+function getUserData() {
+  const user = {
+    first_name: "{{user.first_name}}",
+    last_name: "{{user.last_name}}",
+    email: "{{user.email}}",
+    role: "{{user.role}}",
+    cart:"{{user.cart}}"
+  };
+
+  if (user.role === "ADMIN") {
+    document.getElementById("first_name").innerText = user.first_name;
+    document.getElementById("email").innerText = user.email;
+    document.getElementById("rol").innerText = user.role;
+    document.getElementById("cart").innerText = user.cart;
+
+    const adminButton = document.createElement("button");
+    adminButton.className = "btn btn-success";
+    adminButton.innerHTML = "<p>Panel Administrador</p>";
+    adminButton.onclick = perfilAdmin;
+    document.getElementById("adminButton").appendChild(adminButton);
+  } else {
+    document.getElementById("first_name").innerText = user.first_name;
+    document.getElementById("email").innerText = user.email;
+    document.getElementById("rol").innerText = user.role;
+    document.getElementById("cart").innerText = user.cart;
+    console.log("🚀 ~ file: products.handlebars:189 ~ getUserData ~ user.cart:", user.cart)
+
+  }
+}
+
+getUserData();
+
+</script>

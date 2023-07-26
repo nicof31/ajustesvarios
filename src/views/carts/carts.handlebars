@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Carrito de Compras</title>
+  <style>
+    .product-card {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin: 10px;
+      max-width: 300px;
+    }
+    .product-thumbnail {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+    .product-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 5px 0;
+    }
+    .product-description {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 10px;
+    }
+    .product-price {
+      font-size: 16px;
+      font-weight: bold;
+      color: #009688;
+      margin-bottom: 10px;
+    }
+    .product-quantity {
+      font-size: 14px;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      color: #009688;
+    }
+  </style>
+</head>
+<body>
+  <h1>Carrito de Compras</h1>
+  <h2>Detalles del Carrito</h2>
+  <p>ID del Carrito: {{cart._id}}</p>
+  <h3>Precio total del carrito: $ {{cart.totalCartPrice}}</h3>
+  <button class="btn btn-primary" onclick="volveroProducts()">Volver a Products</button>
+  <button onclick="realizarCompra('{{cart._id}}')" class="btn btn-primary m-2" id="realizarCompraButton" {{#unless cart.products}}disabled{{/unless}}>Realizar Compra</button>  <button onclick="deleteProductFromCart('{{cart._id}}')" class="btn btn-danger" {{#unless cart.products}}disabled{{/unless}}>Delete Products from Cart</button>
+
+  {{#if cart.products}}
+    {{#each cart.products}}
+      <div class="product-card">
+        <!-- <img class="product-thumbnail" src="{{this.product.thumbnail.[0]}}" alt="{{this.product.title}}"> -->
+        <div class="product-title">{{this.product.title}}</div>
+        <div class="product-description">Description:{{this.product.description}}</div>
+        <div class="product-code">Code:{{this.product.code}}</div>
+        <div class="product-stock">Stock:{{this.product.stock}}</div>
+        <div class="product-price">Price unitary: $ {{this.product.price}}</div>
+        <div class="product-quantity">Quantity: {{this.quantity}}</div>
+        <button onclick="increaseQuantity('{{../cart._id}}', '{{this.product._id}}')" class="btn btn-primary">Aumentar Cantidad</button>
+        <button onclick="decreaseQuantity('{{../cart._id}}', '{{this.product._id}}')" class="btn btn-warning">Disminuir Cantidad</button>
+        <div class="product-total-price">Precio total: $ {{this.totalPrice}}</div>
+
+        <button onclick="deleteProduct('{{../cart._id}}', '{{this.product._id}}')" class="btn btn-danger">Eliminar Producto</button>
+      </div>
+    {{/each}}
+  {{else}}
+    <p>No hay productos en el carrito.</p>
+  {{/if}}
+
+
+  <script>
+     function volveroProducts() {
+      window.location.href = '/products';
+    }
+
+function deleteProductFromCart(cartId) {
+  fetch(`http://localhost:8080/api/carts/${cartId}`, {
+    method: 'DELETE'
+  })
+  .then(response => response.json())
+  .then(data => {
+      alert(`Los todos los productos del carrito _id: ${cartId} se eliminaron correctamente`);
+    // Actualizo la página para mostrar los cambios en el carrito
+     window.location.reload();
+  })
+  .catch(error => {
+    console.log(`Error al eliminar productos del carrito: ${error}`);
+    alert(`Ocurrió un error al eliminar los productos del carrito`);
+  });
+}
+
+  function deleteProduct(cartId, productId) {
+    fetch(`http://localhost:8080/api/carts/${cartId}/products/${productId}`, {
+      method: 'DELETE'
+    })
+    .then(response => response.json())
+    .then(data => {
+      alert(`El producto con _id: ${productId} se eliminó correctamente del carrito`);
+      // Actualizo la página para mostrar los cambios en el carrito
+      window.location.reload();
+    })
+    .catch(error => {
+      console.log(`Error al eliminar producto del carrito: ${error}`);
+      alert(`Ocurrió un error al eliminar el producto del carrito`);
+    });
+  }
+
+   function increaseQuantity(cartId, productId) {
+    fetch(`http://localhost:8080/api/carts/${productId}/?accion=aumentar`, {
+      method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+      alert(`La cantidad del producto con _id: ${productId} se aumentó correctamente`);
+      // Actualizo la página para mostrar los cambios en el carrito
+      window.location.reload();
+    })
+    .catch(error => {
+      console.log(`Error al aumentar la cantidad del producto: ${error}`);
+      alert(`Ocurrió un error al aumentar la cantidad del producto`);
+    });
+  }
+    function decreaseQuantity(cartId, productId) {
+    fetch(`http://localhost:8080/api/carts/${productId}/?accion=disminuir`, {
+      method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+      alert(`La cantidad del producto con _id: ${productId} se disminuyó correctamente`);
+      // Actualizo la página para mostrar los cambios en el carrito
+      window.location.reload();
+    })
+    .catch(error => {
+      console.log(`Error al disminuir la cantidad del producto: ${error}`);
+      alert(`Ocurrió un error al disminuir la cantidad del producto`);
+    });
+  }
+
+function realizarCompra(cartId) {
+  fetch(`http://localhost:8080/api/session/${cartId}?realizarCompra=true`, {
+    method: 'POST'
+  })
+  .then(response => response.json())
+  .then(data => {
+    alert(`¡Compra realizada! Gracias por su compra._id: ${cartId}`);
+    // Redirigir a la página /products
+    window.location.href = '/products';
+  })
+  .catch(error => {
+    console.log(`Error al realizar la compra: ${error}`);
+    alert(`Ocurrió un error al realizar la compra`);
+  });
+}
+  </script>
+</body>
+</html>

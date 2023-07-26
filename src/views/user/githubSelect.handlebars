@@ -1,0 +1,25 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Seleccionar usuario de GitHub</title>
+</head>
+<body>
+  <h1>Seleccionar usuario de GitHub</h1>
+
+  <h2>Usuarios existentes</h2>
+  <ul>
+    {{#each users}}
+      <li><a href="/github/select/{{username}}">{{username}}</a></li>
+    {{/each}}
+  </ul>
+
+  <h2>Ingresar otro usuario de GitHub</h2>
+  <form action="/github/select" method="post">
+    <label for="username">Nombre de usuario:</label>
+    <input type="text" id="username" name="username" required>
+    <button type="submit">Ingresar usuario</button>
+  </form>
+</body>
+</html>

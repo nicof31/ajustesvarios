@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Carrito de Compras</title>
+  <style>
+    .product-card {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin: 10px;
+      max-width: 300px;
+    }
+    .product-thumbnail {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+    .product-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 5px 0;
+    }
+    .product-description {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 10px;
+    }
+    .product-price {
+      font-size: 16px;
+      font-weight: bold;
+      color: #009688;
+      margin-bottom: 10px;
+    }
+    .product-quantity {
+      font-size: 14px;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      color: #009688;
+    }
+  </style>
+</head>
+<body>
+  <h1>Carrito de Compras</h1>
+  <h2>Detalles del Carrito Historico</h2>
+  <button class="btn btn-primary" onclick="volveroProducts()">Volver a Products</button> <button class="btn btn-primary" onclick="volverHistory()">Volver a Historial</button>
+ 
+  <p>ID del Carrito: {{cart._id}}</p>
+  <h3>Precio total del carrito: $ {{cart.totalCartPrice}}</h3>
+
+  {{#if cart.products}}
+    {{#each cart.products}}
+      <div class="product-card">
+        <!-- <img class="product-thumbnail" src="{{this.product.thumbnail.[0]}}" alt="{{this.product.title}}"> -->
+        <div class="product-title">{{this.product.title}}</div>
+        <div class="product-description">Description:{{this.product.description}}</div>
+        <div class="product-code">Code:{{this.product.code}}</div>
+        <div class="product-stock">Stock:{{this.product.stock}}</div>
+        <div class="product-price">Price unitary: $ {{this.product.price}}</div>
+        <div class="product-quantity">Quantity: {{this.quantity}}</div>
+        <div class="product-total-price">Precio total: $ {{this.totalPrice}}</div>
+
+      </div>
+    {{/each}}
+  {{else}}
+    <p>No hay productos en el carrito.</p>
+  {{/if}}
+
+
+  <script>
+     function volveroProducts() {
+      window.location.href = '/products';
+    }
+
+    function volverHistory() {
+      window.location.href = 'http://localhost:8080/api/session/historycart';
+    }
+
+
+
+  </script>
+</body>
+</html>

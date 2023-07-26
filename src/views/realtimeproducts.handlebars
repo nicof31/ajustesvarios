@@ -1,0 +1,75 @@
+<div>
+  {{#if productsRealTime}}
+    <h1>Listado de productos en tiempo real</h1>
+    <ul id="product-list">
+      {{#each productsRealTime}}
+        <li>
+          <p>
+            Id: {{this.id}}<br>
+            Title: {{this.title}}<br>
+            Description: {{this.description}}<br>
+            Code: {{this.code}}<br>
+            Price: {{this.price}}<br>
+            Status: {{this.status}}<br>
+            Category: {{this.category}}<br>
+            Thumbnail: {{this.thumbnail}}<br>
+            Stock: {{this.stock}}
+          </p>
+        </li>
+      {{/each}}
+    </ul>
+  {{else}}
+    <h2>No se encontraron resultados de la búsqueda</h2>
+  {{/if}}
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/realTimeProducts.js"></script>
+<script>
+  const socket = io();
+  //Nuevo producto creado metodo POST
+  socket.on('product_added', (updatedProducts) => {
+    const productsRealTime = updatedProducts.slice(0, {{limit}}); 
+    const productList = document.getElementById('product-list');
+    productList.innerHTML = ''; 
+    productsRealTime.forEach((product) => {
+      const listItem = document.createElement('li');
+      listItem.innerHTML = `Id: ${product.id}<br> Title: ${product.title}<br> Description: ${product.description}<br> Code: ${product.code}<br> Price: ${product.price}<br> Status: ${product.status}<br> Category: ${product.category}<br> Thumbnail: ${product.thumbnail}<br> Stock: ${product.stock}<br><br>`;
+      productList.appendChild(listItem);
+    });
+  });
+  //Producto eliminado metodo DELETE
+    socket.on('product_delete', (updatedProducts) => {
+    const productsRealTime = updatedProducts.slice(0, {{limit}}); 
+    const productList = document.getElementById('product-list');
+    productList.innerHTML = ''; 
+    productsRealTime.forEach((product) => {
+      const listItem = document.createElement('li');
+      listItem.innerHTML = `Id: ${product.id}<br> Title: ${product.title}<br> Description: ${product.description}<br> Code: ${product.code}<br> Price: ${product.price}<br> Status: ${product.status}<br> Category: ${product.category}<br> Thumbnail: ${product.thumbnail}<br> Stock: ${product.stock}<br><br>`;
+      productList.appendChild(listItem);
+    });
+  });
+  //Producto actualizado de completa metodo PUT
+ socket.on('product_updateComplet', (updatedProducts) => {
+    const productsRealTime = updatedProducts.slice(0, {{limit}}); 
+    const productList = document.getElementById('product-list');
+    productList.innerHTML = ''; 
+    productsRealTime.forEach((product) => {
+      const listItem = document.createElement('li');
+      listItem.innerHTML = `Id: ${product.id}<br> Title: ${product.title}<br> Description: ${product.description}<br> Code: ${product.code}<br> Price: ${product.price}<br> Status: ${product.status}<br> Category: ${product.category}<br> Thumbnail: ${product.thumbnail}<br> Stock: ${product.stock}<br><br>`;
+      productList.appendChild(listItem);
+    });
+  });
+  //Producto actualizado de forma parcial metodo PATCH
+ socket.on('product_updateParam', (updatedProducts) => {
+    const productsRealTime = updatedProducts.slice(0, {{limit}}); 
+    const productList = document.getElementById('product-list');
+    productList.innerHTML = ''; 
+    productsRealTime.forEach((product) => {
+      const listItem = document.createElement('li');
+      listItem.innerHTML = `Id: ${product.id}<br> Title: ${product.title}<br> Description: ${product.description}<br> Code: ${product.code}<br> Price: ${product.price}<br> Status: ${product.status}<br> Category: ${product.category}<br> Thumbnail: ${product.thumbnail}<br> Stock: ${product.stock}<br><br>`;
+      productList.appendChild(listItem);
+    });
+  });
+
+</script>

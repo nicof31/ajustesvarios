@@ -1,0 +1,24 @@
+<div>
+{{#if productsFilter}}
+<h1>Listado productos guardado en BBDD</h1>
+<ul>
+{{#each productsFilter}}
+ <li>
+          <p>
+            Id: {{this.id}}<br>
+            Title: {{this.title}}<br>
+            Description: {{this.description}}<br>
+            Code: {{this.code}}<br>
+            Price: {{this.price}}<br>
+            Status: {{this.status}}<br>
+            Category: {{this.category}}<br>
+            Thumbnail: {{this.thumbnail}}<br>
+            Stock: {{this.stock}}
+          </p>
+        </li>{{/each}}
+</ul>
+{{else}}
+<h2>No se encontraron resultado de la busqueda</h2>
+{{/if}}
+</div>
+

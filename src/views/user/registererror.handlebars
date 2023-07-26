@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Error al Registrar Usuario</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    h1 {
+      color: red;
+    }
+    
+    p {
+      margin-bottom: 10px;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #337ab7;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Error al Registrar Usuario</h1>
+  
+  {{#if error}}
+    <p>{{error}}</p>
+  {{/if}}
+  
+  <p>No se pudo registrar el usuario con las credenciales proporcionadas, ya que el correo se encuentra utilizado en otro usuario</p>
+  <p>Por favor, cargue un nuevo correo e intenta nuevamente.</p>
+  
+  <a class="btn" href="/register">Aceptar</a>
+</body>
+</html>
