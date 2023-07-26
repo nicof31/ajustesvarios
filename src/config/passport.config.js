@@ -98,11 +98,14 @@ passport.use(
             role: "USER",
             cart: null,
           });
+
           console.log("Usuario registrado exitosamente:", newUser);
-          const idCartUser = newUser._id;
+          const idUser = newUser._id.toString() 
+          console.log("🚀 ~ file: session.router.js:46 ~ routerSession.post ~ idUser:", idUser)
+
           const newUserWithCart = await cartsModel.create({
-            _id: idCartUser,
             products: [],
+            user: idUser,
           });
           newUser.cart = newUserWithCart;
           await newUser.save();
